@@ -1,0 +1,2 @@
+# sinatra
+Sinatraを使ったシンプルなWebアプリのリポジトリ
