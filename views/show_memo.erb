@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1>メモアプリ</h1>
+    <div>
+      <input type="text" name="title" readonly><%= @title %></input>
+    </div>
+    <div>
+      <textarea name="memo" rows="5" readonly><%= @memo %></textarea>
+    </div>
+    <form action="/edit" method="get">
+      <div>  
+        <input type="submit" value="変更">
+      </div>
+    </form>
+    <form action="index" method="delete">
+      <div>
+        <input type="submit" value="削除">
+      </div>
+    </form>
+  </body>
+</html>

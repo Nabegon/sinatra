@@ -5,13 +5,14 @@
 <body>
   <h1>メモアプリ</h1>
   <div>
-    <ul>
-      <li><a href="/">トップへ戻る</a></li>
-      <li><%= @title %></li>
-    </ul>
+    <form method="get" action="/show_memo"> 
+      <ul>
+        <li><a href='show_memo'><%= @title %></a></li>
+      </ul>
+    </form>
   </div>
   <div>
-    <form method="POST" action="/form">
+    <form method="get" action="/form">
       <input type="button" onclick="location.href='/form'" value="追加">
     </form>
   </div>

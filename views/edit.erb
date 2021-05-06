@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1>メモアプリ</h1>
+    <form action="/edit" method="patch">
+      <div>
+        <input type="text" name="title"><%= @title %></input>
+      </div>
+      <div>
+        <textarea name="memo" rows="5"><%= @memo %></textarea>
+      </div>
+      <div>
+        <input type="submit" value="変更">
+      </div>
+  </body>
+</html>
