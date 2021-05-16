@@ -5,11 +5,13 @@
 <body>
   <h1>メモアプリ</h1>
   <div>
+  <% @filenames.each do |title| %>
     <form method="get" action="/show_memo"> 
       <ul>
-        <li><a href='show_memo'><%= @title %></a></li>
+        <li><a href='/show_memo/<%= File.basename(title, ".*") %>'><%= @title = File.basename(title, ".*") %></a></li>
       </ul>
     </form>
+  <% end %>
   </div>
   <div>
     <form method="get" action="/form">

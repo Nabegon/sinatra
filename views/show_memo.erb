@@ -6,10 +6,10 @@
   <body>
     <h1>メモアプリ</h1>
     <div>
-      <input type="text" name="title" readonly><%= @title %></input>
+      <input type="text" name="title" value="<%= @title %>" readonly></input>
     </div>
     <div>
-      <textarea name="memo" rows="5" readonly><%= @memo %></textarea>
+      <textarea name="body" rows="5" readonly><%= @body %></textarea>
     </div>
     <form action="/edit" method="get">
       <div>  
