@@ -4,51 +4,58 @@ require 'erb'
 require 'json'
 
 get '/index' do
-  @filenames = Dir.glob("*.json", base:Dir.pwd)
-  
+  files = Dir.glob("*.json", base:Dir.pwd)
+  file_datas = files.map { |file| File.read(file) }
+  @hash = file_datas.map { |line| JSON.parse(line) }
+   
   erb :index
-end
-
-get '/form' do
-  erb :form
 end
 
 post '/index' do
-  @filenames = Dir.glob("*.json", base:Dir.pwd)
- 
-  title = params[:title]  
-  hash = {"id" => SecureRandom.uuid,"title" => title,"body" => params[:body]}
-  # hash["memo"] = []
-  # hash["memo"].append({"id": SecureRandom.uuid, "title": title, "body": params[:body]})
-  
-  # File.open("#{title}.json", 'w') do |f|
-  #   json_format = JSON.generate(hash, f)
-  #   f.write(json_format)
-  # end  
-  # json_format = JSON.dump(hash, f)
-
-  File.open("#{title}.json", 'w') do |file|
-    file.puts JSON.generate(hash)
-  end
-  
-  erb :index
+  id =  SecureRandom.uuid
+  hash = {id: id, title: params[:title], body: params[:body]}
+  File.open("#{id}.json", 'w') { |file| file.puts JSON.generate(hash)}
+  redirect '/index'
 end
 
-get '/show_memo/:title' do
-  @title = params['title']
-  
-  json = File.read("./#{@title}.json")
+def file_name
+  "./#{params[:id]}.json"
+end
+
+get '/show_memo/:id' do
+  json = File.read(file_name)
   data_hash = JSON.parse(json.to_json)
-  # File.open("./#{@title}.json") do |f|
-  #   hash = JSON.load(f)
-  # end
-  # data_hash = JSON.parse(hash.to_json)
-  hash = JSON.parse(data_hash)
-  @body = hash["body"]
-  
+  @hash = JSON.parse(data_hash)
+  @id = params[:id]
+
   erb :show_memo
 end
 
-get '/edit' do
+get '/edit/:id' do
+  json = File.read(file_name)
+  data_hash = JSON.parse(json.to_json)
+  @hash = JSON.parse(data_hash)
+    
   erb :edit
+end
+
+patch '/index/:id' do
+  title = params[:title]
+  body = params[:body]
+
+  json = File.read(file_name)
+  data_hash = JSON.parse(json.to_json)
+  hash = JSON.parse(data_hash)
+    
+  if hash["body"] != body
+    hash["body"] = body
+    File.open(file_name, 'w') { |file| JSON.dump(hash, file) }
+  end
+   
+  if hash["title"] != title
+    hash["title"] = title
+    File.open(file_name, 'w') { |f| JSON.dump(hash, f) }
+  end
+
+  redirect '/index'  
 end

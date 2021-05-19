@@ -6,17 +6,17 @@
   <body>
     <h1>メモアプリ</h1>
     <div>
-      <input type="text" name="title" value="<%= @title %>" readonly></input>
+      <input type="text" name="title" value="<%= @hash["title"] %>" readonly></input>
     </div>
     <div>
-      <textarea name="body" rows="5" readonly><%= @body %></textarea>
+      <textarea name="body" rows="5" readonly><%= @hash["body"] %></textarea>
     </div>
-    <form action="/edit" method="get">
+    <form action="/edit/<%= @hash["id"] %>" method="get">
       <div>  
         <input type="submit" value="変更">
       </div>
     </form>
-    <form action="index" method="delete">
+    <form action="/index/<%= @hash["id"] %>" method="delete">
       <div>
         <input type="submit" value="削除">
       </div>
