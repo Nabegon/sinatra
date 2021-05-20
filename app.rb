@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sinatra'
 require 'sinatra/reloader'
 require 'erb'
@@ -17,7 +19,7 @@ get '/memos' do
   files = Dir.glob('memos/*')
   file_datas = files.map { |file| File.read(file) }
   @hash = file_datas.map { |data| JSON.parse(data) }
-   
+
   erb :index
 end
 
@@ -26,11 +28,11 @@ get '/memos/new' do
 end
 
 post '/memos' do
-  id =  SecureRandom.uuid
-  hash = {id: id, title: params[:title], body: params[:body]}
-  Dir.mkdir("memos") unless File.exists?("memos")
-  File.open("memos/#{id}.json", 'w') { |file| file.puts JSON.generate(hash)}
-  
+  id = SecureRandom.uuid
+  hash = { id: id, title: params[:title], body: params[:body] }
+  Dir.mkdir('memos') unless File.exist?('memos')
+  File.open("memos/#{id}.json", 'w') { |file| file.puts JSON.generate(hash) }
+
   redirect to "/memos/#{id}"
 end
 
@@ -50,7 +52,7 @@ get '/memos/:id/edit' do
   json = File.read(memo_file)
   data_hash = JSON.parse(json.to_json)
   @hash = JSON.parse(data_hash)
-    
+
   erb :edit
 end
 
@@ -61,22 +63,22 @@ patch '/memos/:id' do
   json = File.read(memo_file)
   data_hash = JSON.parse(json.to_json)
   hash = JSON.parse(data_hash)
-    
-  if hash["body"] != body
-    hash["body"] = body
+
+  if hash['body'] != body
+    hash['body'] = body
     File.open(memo_file, 'w') { |file| JSON.dump(hash, file) }
   end
-   
-  if hash["title"] != title
-    hash["title"] = title
+
+  if hash['title'] != title
+    hash['title'] = title
     File.open(memo_file, 'w') { |f| JSON.dump(hash, f) }
   end
 
-  redirect to "/memos/#{params[:id]}"  
+  redirect to "/memos/#{params[:id]}"
 end
 
 delete '/memos/:id' do
   File.delete(memo_file)
-  
-  redirect to "/memos"
+
+  redirect to '/memos'
 end
