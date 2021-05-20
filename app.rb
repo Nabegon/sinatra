@@ -11,6 +11,10 @@ get '/index' do
   erb :index
 end
 
+get '/form' do
+  erb :form
+end
+
 post '/index' do
   id =  SecureRandom.uuid
   hash = {id: id, title: params[:title], body: params[:body]}
@@ -58,4 +62,10 @@ patch '/index/:id' do
   end
 
   redirect '/index'  
+end
+
+delete '/index/:id' do
+  File.delete(file_name)
+  
+  redirect '/index'
 end

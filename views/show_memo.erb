@@ -16,10 +16,11 @@
         <input type="submit" value="変更">
       </div>
     </form>
-    <form action="/index/<%= @hash["id"] %>" method="delete">
-      <div>
-        <input type="submit" value="削除">
-      </div>
+    <form action="/index/<%= @hash["id"] %>" method="post">
+      <input type="hidden" name="_method" value="DELETE">
+        <div>
+          <input type="submit" value="削除">
+        </div>
     </form>
   </body>
 </html>
