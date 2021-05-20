@@ -6,16 +6,14 @@
   <h1>メモアプリ</h1>
   <div>
   <% @hash.each do |memo| %>
-    <form method="get" action="/show_memo"> 
-      <ul>
-        <li><a href='/show_memo/<%= memo["id"] %>'><%= h(memo["title"]) %></a></li>
-      </ul>
-    </form>
+    <ul>
+      <li><a href='/memos/<%= memo["id"] %>'><%= h(memo["title"]) %></a></li>
+    </ul>
   <% end %>
   </div>
   <div>
-    <form method="get" action="/form">
-      <input type="button" onclick="location.href='/form'" value="追加">
+    <form action="/memos/new" method="get">
+      <input type="submit" value="追加">
     </form>
   </div>
 </body>

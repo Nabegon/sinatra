@@ -5,7 +5,7 @@
   </head>
   <body>
     <h1>メモアプリ</h1>
-    <form action="/index/<%= @hash["id"] %>" method="post">
+    <form action="/memos/<%= @hash["id"] %>" method="post">
       <input name="_method" type="hidden" value="patch" />
       <div>
         <input type="text" name="title" value="<%= h(@hash["title"]) %>"></input>
