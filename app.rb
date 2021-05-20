@@ -14,7 +14,7 @@ not_found do
 end
 
 get '/memos' do
-  files = Dir.glob("*.json", base:Dir.pwd)
+  files = Dir.glob('memos/*')
   file_datas = files.map { |file| File.read(file) }
   @hash = file_datas.map { |data| JSON.parse(data) }
    
@@ -28,17 +28,18 @@ end
 post '/memos' do
   id =  SecureRandom.uuid
   hash = {id: id, title: params[:title], body: params[:body]}
-  File.open("#{id}.json", 'w') { |file| file.puts JSON.generate(hash)}
+  Dir.mkdir("memos") unless File.exists?("memos")
+  File.open("memos/#{id}.json", 'w') { |file| file.puts JSON.generate(hash)}
   
   redirect to "/memos/#{id}"
 end
 
-def file_name
-  "./#{params[:id]}.json"
+def memo_file
+  "memos/#{params[:id]}.json"
 end
 
 get '/memos/:id' do
-  json = File.read(file_name)
+  json = File.read(memo_file)
   data_hash = JSON.parse(json.to_json)
   @hash = JSON.parse(data_hash)
 
@@ -46,7 +47,7 @@ get '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  json = File.read(file_name)
+  json = File.read(memo_file)
   data_hash = JSON.parse(json.to_json)
   @hash = JSON.parse(data_hash)
     
@@ -57,25 +58,25 @@ patch '/memos/:id' do
   title = params[:title]
   body = params[:body]
 
-  json = File.read(file_name)
+  json = File.read(memo_file)
   data_hash = JSON.parse(json.to_json)
   hash = JSON.parse(data_hash)
     
   if hash["body"] != body
     hash["body"] = body
-    File.open(file_name, 'w') { |file| JSON.dump(hash, file) }
+    File.open(memo_file, 'w') { |file| JSON.dump(hash, file) }
   end
    
   if hash["title"] != title
     hash["title"] = title
-    File.open(file_name, 'w') { |f| JSON.dump(hash, f) }
+    File.open(memo_file, 'w') { |f| JSON.dump(hash, f) }
   end
 
   redirect to "/memos/#{params[:id]}"  
 end
 
 delete '/memos/:id' do
-  File.delete(file_name)
+  File.delete(memo_file)
   
   redirect to "/memos"
 end
