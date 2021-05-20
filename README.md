@@ -13,3 +13,4 @@ Sinatraを使ったシンプルなWebアプリのリポジトリ
 5. app.rb(メモアプリの実行ファイル)を実行する： <code>bundle exec ruby app.rb</code>
 
 6. ブラウザで動作を確認する。<code>http://localhost:4567/memos</code>と入力するとブラウザ上にメモアプリが表示される。
+
