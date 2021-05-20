@@ -8,7 +8,7 @@
   <% @hash.each do |memo| %>
     <form method="get" action="/show_memo"> 
       <ul>
-        <li><a href='/show_memo/<%= memo["id"] %>'><%= memo["title"] %></a></li>
+        <li><a href='/show_memo/<%= memo["id"] %>'><%= h(memo["title"]) %></a></li>
       </ul>
     </form>
   <% end %>

@@ -6,10 +6,10 @@
   <body>
     <h1>メモアプリ</h1>
     <div>
-      <input type="text" name="title" value="<%= @hash["title"] %>" readonly></input>
+      <input type="text" name="title" value="<%= h(@hash["title"]) %>" readonly></input>
     </div>
     <div>
-      <textarea name="body" rows="5" readonly><%= @hash["body"] %></textarea>
+      <textarea name="body" rows="5" readonly><%= h(@hash["body"]) %></textarea>
     </div>
     <form action="/edit/<%= @hash["id"] %>" method="get">
       <div>  

@@ -3,6 +3,16 @@ require 'sinatra/reloader'
 require 'erb'
 require 'json'
 
+helpers do
+  def h(text)
+    Rack::Utils.escape_html(text)
+  end
+end
+
+not_found do
+  'not found'
+end
+
 get '/index' do
   files = Dir.glob("*.json", base:Dir.pwd)
   file_datas = files.map { |file| File.read(file) }
