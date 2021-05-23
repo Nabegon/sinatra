@@ -11,14 +11,46 @@ helpers do
   end
 end
 
+# Class for accessing data (memos)
+class Memo
+  def create_memo(title, body)
+    id = SecureRandom.uuid
+    hash = { id: id, title: title, body: body }
+    Dir.mkdir('memos') unless File.exist?('memos')
+    File.open("memos/#{id}.json", 'w') { |file| file.puts JSON.generate(hash) }
+  end
+
+  def load_all_memos
+    files = Dir.glob('memos/*')
+    file_datas = files.map { |file| File.read(file) }
+    file_datas.map { |data| JSON.parse(data) }
+  end
+
+  def filepath(id)
+    @path = "memos/#{id}.json"
+  end
+
+  def file_open
+    json = File.read(@path)
+    data_hash = JSON.parse(json.to_json)
+    JSON.parse(data_hash)
+  end
+
+  def rewrite_file(hash)
+    File.open(@path, 'w') { |file| JSON.dump(hash, file) }
+  end
+
+  def delete_file
+    File.delete(@path)
+  end
+end
+
 not_found do
   'not found'
 end
 
 get '/memos' do
-  files = Dir.glob('memos/*')
-  file_datas = files.map { |file| File.read(file) }
-  @hash = file_datas.map { |data| JSON.parse(data) }
+  @hash = Memo.new.load_all_memos
 
   erb :index
 end
@@ -28,30 +60,22 @@ get '/memos/new' do
 end
 
 post '/memos' do
-  id = SecureRandom.uuid
-  hash = { id: id, title: params[:title], body: params[:body] }
-  Dir.mkdir('memos') unless File.exist?('memos')
-  File.open("memos/#{id}.json", 'w') { |file| file.puts JSON.generate(hash) }
-
-  redirect to "/memos/#{id}"
-end
-
-def memo_file
-  "memos/#{params[:id]}.json"
+  Memo.new.create_memo(params[:title], params[:body])
+  redirect to '/memos'
 end
 
 get '/memos/:id' do
-  json = File.read(memo_file)
-  data_hash = JSON.parse(json.to_json)
-  @hash = JSON.parse(data_hash)
+  memo = Memo.new
+  memo.filepath(params[:id])
+  @hash = memo.file_open
 
   erb :show_memo
 end
 
 get '/memos/:id/edit' do
-  json = File.read(memo_file)
-  data_hash = JSON.parse(json.to_json)
-  @hash = JSON.parse(data_hash)
+  memo = Memo.new
+  memo.filepath(params[:id])
+  @hash = memo.file_open
 
   erb :edit
 end
@@ -60,25 +84,27 @@ patch '/memos/:id' do
   title = params[:title]
   body = params[:body]
 
-  json = File.read(memo_file)
-  data_hash = JSON.parse(json.to_json)
-  hash = JSON.parse(data_hash)
+  memo = Memo.new
+  memo.filepath(params[:id])
+  hash = memo.file_open
 
   if hash['body'] != body
     hash['body'] = body
-    File.open(memo_file, 'w') { |file| JSON.dump(hash, file) }
+    memo.rewrite_file(hash)
   end
 
   if hash['title'] != title
     hash['title'] = title
-    File.open(memo_file, 'w') { |f| JSON.dump(hash, f) }
+    memo.rewrite_file(hash)
   end
 
   redirect to "/memos/#{params[:id]}"
 end
 
 delete '/memos/:id' do
-  File.delete(memo_file)
+  memo = Memo.new
+  memo.filepath(params[:id])
+  memo.delete_file
 
   redirect to '/memos'
 end
