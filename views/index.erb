@@ -5,7 +5,7 @@
 <body>
   <h1>メモアプリ</h1>
   <div>
-  <% @hash.each do |memo| %>
+  <% @memos.each do |memo| %>
     <ul>
       <li><a href='/memos/<%= memo["id"] %>'><%= h(memo["title"]) %></a></li>
     </ul>

@@ -27,7 +27,9 @@ class Memo
   end
 
   def filepath(id)
-    @path = "memos/#{id}.json"
+    file_path = "/home/miki/sinatra/memos/"
+    file_name = File.basename("memos/#{id}.json");
+    @path = file_path + file_name
   end
 
   def file_open
@@ -50,7 +52,7 @@ not_found do
 end
 
 get '/memos' do
-  @hash = Memo.new.load_all_memos
+  @memos = Memo.new.load_all_memos
 
   erb :index
 end
