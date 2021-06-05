@@ -4,6 +4,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'erb'
 require 'json'
+require 'digest'
 
 helpers do
   def h(text)
@@ -17,7 +18,8 @@ class Memo
     id = SecureRandom.uuid
     hash = { id: id, title: title, body: body }
     Dir.mkdir('memos') unless File.exist?('memos')
-    File.open("memos/#{id}.json", 'w') { |file| file.puts JSON.generate(hash) }
+    file_name = Digest::MD5.hexdigest(id)
+    File.open("memos/#{file_name}.json", 'w') { |file| file.puts JSON.generate(hash) }
   end
 
   def load_all_memos
@@ -27,9 +29,10 @@ class Memo
   end
 
   def filepath(id)
-    file_path = "/home/miki/sinatra/memos/"
-    file_name = File.basename("memos/#{id}.json");
-    @path = file_path + file_name
+    id_from_user = Digest::MD5.hexdigest(id)
+    Dir.glob('memos/*') do |file|
+      @path = "memos/#{id_from_user}.json" if File.basename(file) == "#{id_from_user}.json"
+    end
   end
 
   def file_open
