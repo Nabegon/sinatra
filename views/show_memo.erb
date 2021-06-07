@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1>メモアプリ</h1>
+    <div>
+      <input type="text" name="title" value="<%= h(@hash["title"]) %>" readonly></input>
+    </div>
+    <div>
+      <textarea name="body" rows="5" readonly><%= h(@hash["body"]) %></textarea>
+    </div>
+    <form action="/memos/<%= @hash["id"] %>/edit" method="get">
+      <div>  
+        <input type="submit" value="変更">
+      </div>
+    </form>
+    <form action="/memos/<%= @hash["id"] %>" method="post">
+      <input type="hidden" name="_method" value="DELETE">
+        <div>
+          <input type="submit" value="削除">
+        </div>
+    </form>
+    <form action="/memos" method="get">
+      <div>  
+        <input type="submit" value="トップページへ戻る">
+      </div>
+    </form>
+  </body>
+</html>
