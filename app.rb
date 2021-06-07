@@ -4,7 +4,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'erb'
 require 'json'
-require 'digest'
+require 'pg'
 
 helpers do
   def h(text)
@@ -14,39 +14,33 @@ end
 
 # Class for accessing data (memos)
 class Memo
+  def initialize
+    @connection = PG.connect(:host => "localhost", :user => "postgres", :password => "osushi",  :dbname => "memos")
+  end
+  
   def create_memo(title, body)
     id = SecureRandom.uuid
-    hash = { id: id, title: title, body: body }
-    Dir.mkdir('memos') unless File.exist?('memos')
-    file_name = Digest::MD5.hexdigest(id)
-    File.open("memos/#{file_name}.json", 'w') { |file| file.puts JSON.generate(hash) }
+    @connection.exec("INSERT INTO memos VALUES ('#{id}', '#{title}', '#{body}')")
   end
 
   def load_all_memos
-    files = Dir.glob('memos/*')
-    file_datas = files.map { |file| File.read(file) }
-    file_datas.map { |data| JSON.parse(data) }
+    @connection.exec("SELECT * FROM memos")
   end
 
   def filepath(id)
-    id_from_user = Digest::MD5.hexdigest(id)
-    Dir.glob('memos/*') do |file|
-      @path = "memos/#{id_from_user}.json" if File.basename(file) == "#{id_from_user}.json"
-    end
+    @id = id
   end
 
   def file_open
-    json = File.read(@path)
-    data_hash = JSON.parse(json.to_json)
-    JSON.parse(data_hash)
+    @connection.exec("SELECT * FROM memos WHERE id = '#{@id}'")
   end
 
-  def rewrite_file(hash)
-    File.open(@path, 'w') { |file| JSON.dump(hash, file) }
+  def rewrite_file(title, body)
+    @connection.exec("UPDATE memos SET title = '#{title}', body = '#{body}' WHERE id = '#{id}'")
   end
 
   def delete_file
-    File.delete(@path)
+    @connection.exec("DELETE FROM memos WHERE id = '#{id}'")
   end
 end
 
@@ -86,22 +80,9 @@ get '/memos/:id/edit' do
 end
 
 patch '/memos/:id' do
-  title = params[:title]
-  body = params[:body]
-
   memo = Memo.new
   memo.filepath(params[:id])
-  hash = memo.file_open
-
-  if hash['body'] != body
-    hash['body'] = body
-    memo.rewrite_file(hash)
-  end
-
-  if hash['title'] != title
-    hash['title'] = title
-    memo.rewrite_file(hash)
-  end
+  memo.rewrite_file(params[:title], params[:body])
 
   redirect to "/memos/#{params[:id]}"
 end
