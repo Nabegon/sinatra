@@ -36,11 +36,11 @@ class Memo
   end
 
   def rewrite_file(title, body)
-    @connection.exec("UPDATE memos SET title = '#{title}', body = '#{body}' WHERE id = '#{id}'")
+    @connection.exec("UPDATE memos SET title = '#{title}', body = '#{body}' WHERE id = '#{@id}'")
   end
 
   def delete_file
-    @connection.exec("DELETE FROM memos WHERE id = '#{id}'")
+    @connection.exec("DELETE FROM memos WHERE id = '#{@id}'")
   end
 end
 
