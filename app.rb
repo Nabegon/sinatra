@@ -15,16 +15,16 @@ end
 # Class for accessing data (memos)
 class Memo
   def initialize
-    @connection = PG.connect(:host => "localhost", :user => "postgres", :password => "osushi",  :dbname => "memos")
+    @connection = PG.connect(host: 'localhost', user: 'postgres', password: 'osushi', dbname: 'memos')
   end
-  
+
   def create_memo(title, body)
     id = SecureRandom.uuid
     @connection.exec("INSERT INTO memos VALUES ('#{id}', '#{title}', '#{body}')")
   end
 
   def load_all_memos
-    @connection.exec("SELECT * FROM memos")
+    @connection.exec('SELECT * FROM memos')
   end
 
   def filepath(id)

@@ -6,9 +6,9 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 # gem "rails"
 gem 'haml'
+gem 'pg'
 gem 'redcarpet'
 gem 'sass'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'webrick'
-gem 'pg'
