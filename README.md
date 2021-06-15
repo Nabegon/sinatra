@@ -11,7 +11,7 @@ postgresqlを使用します。
 3. <code>\c memos</code> 作成したデータベースにログインします。
 
 4. テーブルを作成します。
-<pre><code>memos=# CREATE TABLE memos(id TEXT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, PRIMARY KEY (id));
+<pre><code>memos=# CREATE TABLE memos(id TEXT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, PRIMARY KEY (id));</code></pre>
 
 # ローカルでアプリケーションを立ち上げるための手順
 1. <code>git clone -b dev_db https://github.com/Nabegon/sinatra.git</code> を実行し、ローカル環境にクローンを作成する。
