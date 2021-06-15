@@ -4,14 +4,14 @@ Sinatraを使ったシンプルなWebアプリのリポジトリ
 # データベースの作成
 postgresqlを使用します。
 
-1. <code>psql -U db_name</code>で自分のデータベースにログインする。db_nameには自分のデータベース名を入力してください。
+1. <code>psql -U db_name</code> で自分のデータベースにログインする。db_nameには自分のデータベース名を入力してください。
 
-2. <code>postgres=# CREATE DATABASE memos;</code>このアプリ用のデータベース、memosを作成します。
+2. <code>postgres=# CREATE DATABASE memos;</code> このアプリ用のデータベース、memosを作成します。
 
-3. <code>\c memos</code>作成したデータベースにログインします。
+3. <code>\c memos</code> 作成したデータベースにログインします。
 
-4. <pre><code>"memos=# CREATE TABLE memos(id TEXT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, PRIMARY KEY (id));"
-テーブルを作成します。
+4. テーブルを作成します。
+<pre><code>memos=# CREATE TABLE memos(id TEXT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, PRIMARY KEY (id));
 
 # ローカルでアプリケーションを立ち上げるための手順
 1. <code>git clone -b dev_db https://github.com/Nabegon/sinatra.git</code> を実行し、ローカル環境にクローンを作成する。
