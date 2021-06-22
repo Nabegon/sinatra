@@ -2,7 +2,7 @@
 Sinatraを使ったシンプルなWebアプリのリポジトリ
 
 # データベースの作成
-postgresqlを使用します。
+PostgreSQLを使用します。事前にPostgreSQLをインストールしておいてください。
 
 1. <code>psql -U db_name</code> で自分のデータベースにログインする。db_nameには自分のデータベース名を入力してください。
 
