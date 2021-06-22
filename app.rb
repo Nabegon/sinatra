@@ -20,11 +20,13 @@ class Memo
 
   def create_memo(title, body)
     id = SecureRandom.uuid
-    @connection.exec("INSERT INTO memos VALUES ('#{id}', '#{title}', '#{body}')")
+    @connection.prepare("create_memo", "INSERT INTO memos VALUES ($1, $2, $3)")
+    @connection.exec_prepared("create_memo", [id, title, body])
   end
 
   def load_all_memos
-    @connection.exec('SELECT * FROM memos')
+    @connection.prepare("load_all_memos", "SELECT * FROM memos")
+    @connection.exec_prepared("load_all_memos")
   end
 
   def filepath(id)
@@ -32,15 +34,18 @@ class Memo
   end
 
   def file_open
-    @connection.exec("SELECT * FROM memos WHERE id = '#{@id}'")
+    @connection.prepare("file_open", "SELECT * FROM memos WHERE id = $1")
+    @connection.exec_prepared("file_open", [@id])
   end
 
   def rewrite_file(title, body)
-    @connection.exec("UPDATE memos SET title = '#{title}', body = '#{body}' WHERE id = '#{@id}'")
+    @connection.prepare("update_file", "UPDATE memos SET (title, body) = ($1, $2) WHERE id = $3")
+    @connection.exec_prepared("update_file", [title, body, @id])
   end
 
   def delete_file
-    @connection.exec("DELETE FROM memos WHERE id = '#{@id}'")
+    @connection.prepare("delete_file", "DELETE FROM memos WHERE id = $1")
+    @connection.exec_prepared("delete_file", [@id])
   end
 end
 
