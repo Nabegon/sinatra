@@ -29,23 +29,23 @@ class Memo
     @connection.exec_prepared("load_all_memos")
   end
 
-  def filepath(id)
+  def memo_id(id)
     @id = id
   end
 
-  def file_open
-    @connection.prepare("file_open", "SELECT * FROM memos WHERE id = $1")
-    @connection.exec_prepared("file_open", [@id])
+  def load_memo
+    @connection.prepare("load_memo", "SELECT * FROM memos WHERE id = $1")
+    @connection.exec_prepared("load_memo", [@id])
   end
 
-  def rewrite_file(title, body)
-    @connection.prepare("update_file", "UPDATE memos SET (title, body) = ($1, $2) WHERE id = $3")
-    @connection.exec_prepared("update_file", [title, body, @id])
+  def update_memo(title, body)
+    @connection.prepare("update_memo", "UPDATE memos SET (title, body) = ($1, $2) WHERE id = $3")
+    @connection.exec_prepared("update_memo", [title, body, @id])
   end
 
-  def delete_file
-    @connection.prepare("delete_file", "DELETE FROM memos WHERE id = $1")
-    @connection.exec_prepared("delete_file", [@id])
+  def delete_memo
+    @connection.prepare("delete_memo", "DELETE FROM memos WHERE id = $1")
+    @connection.exec_prepared("delete_memo", [@id])
   end
 end
 
@@ -70,32 +70,33 @@ end
 
 get '/memos/:id' do
   memo = Memo.new
-  memo.filepath(params[:id])
-  @hash = memo.file_open
+  memo.memo_id(params[:id])
+  @hash = memo.load_memo
 
   erb :show_memo
 end
 
 get '/memos/:id/edit' do
   memo = Memo.new
-  memo.filepath(params[:id])
-  @hash = memo.file_open
+  memo.memo_id(params[:id])
+  @hash = memo.load_memo
 
   erb :edit
 end
 
 patch '/memos/:id' do
   memo = Memo.new
-  memo.filepath(params[:id])
-  memo.rewrite_file(params[:title], params[:body])
+  memo.memo_id(params[:id])
+  memo.update_memo(params[:title], params[:body])
 
   redirect to "/memos/#{params[:id]}"
 end
 
 delete '/memos/:id' do
   memo = Memo.new
-  memo.filepath(params[:id])
-  memo.delete_file
+  memo.memo_id(params[:id])
+  memo.delete_memo
 
   redirect to '/memos'
 end
+
