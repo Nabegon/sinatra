@@ -5,14 +5,16 @@
   </head>
   <body>
     <h1>メモアプリ</h1>
-    <form action="/memos/<%= @hash["id"] %>" method="post">
+    <% @hash.each do |memo| %>
+    <form action="/memos/<%= memo["id"] %>" method="post">
       <input name="_method" type="hidden" value="patch" />
       <div>
-        <input type="text" name="title" value="<%= h(@hash["title"]) %>"></input>
+        <input type="text" name="title" value="<%= h(memo["title"]) %>"></input>
       </div>
       <div>
-        <textarea name="body" rows="5"><%= h(@hash["body"]) %></textarea>
+        <textarea name="body" rows="5"><%= h(memo["body"]) %></textarea>
       </div>
+    <% end %>
       <div>
         <input type="submit" value="変更">
       </div>
